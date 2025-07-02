@@ -1,0 +1,132 @@
+<header>
+  <h1 class="fade-in">Tablero</h1>
+</header>
+
+<div id="play">
+
+  {{#if codigo}}
+    <section id="codigo-invitacion">
+      <h2>Código de Invitación</h2>
+      <p>Comparte este enlace para invitar a un amigo:</p>
+      <code>{{baseUrl}}/invitacion/{{codigo}}</code>
+    </section>
+  {{/if}}
+
+  <div id="tablero" class="tablero"></div>
+
+  <div id="detalles">
+    <section id="historial">
+      <h2>Registro de Movimientos</h2>
+      <ul id="lista-de-movimientos"></ul>
+    </section>
+
+    <div id="piezas-capturadas">
+      <div class="bandeja" id="capturadas-blancas">
+        <h3>Piezas capturadas por las blancas:</h3>
+        <div class="contenedor-piezas"></div>
+      </div>
+      <div class="bandeja" id="capturadas-negras">
+        <h3>Piezas capturadas por las negras:</h3>
+        <div class="contenedor-piezas"></div>
+      </div>
+    </div>
+
+    <section id="turno">
+      <h2>Turno de Juego</h2>
+      <p id="turno-jugador">Es tu turno de juego</p>
+    </section>
+
+    <section id="controlesdeljuego">
+      <button id="nuevojuego">Nuevo Juego</button>
+      <button id="rendirse">Rendirse</button>
+    </section>
+
+    {{#if esCreador}}
+      <section id="eliminar-partida">
+        <form action="/eliminar-partida/{{codigo}}" method="GET" style="margin-top: 20px;">
+          <button type="submit" class="btn btn-danger" style="background-color: #d9534f; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">
+            Eliminar Partida
+          </button>
+        </form>
+      </section>
+    {{/if}}
+
+    <section id="oponente">
+      <label for="seleccionar-oponente">Selecciona el Oponente:</label>
+      <select name="oponente" id="seleccionar-oponente">
+        <option value="humano">Persona</option>
+        <option value="computadora">Bot</option>
+      </select>
+      <button class="pulse" onclick="iniciarPartida()">Iniciar Partida</button>
+    </section>
+
+    <h1>Estás jugando en modo: {{modo}}</h1>
+    <h2>Código de partida: {{codigo}}</h2>
+  </div>
+
+  {{#if esCreador}}
+    {{#if esEsperando}}
+      <section id="compartir">
+        <h2>Invitar a un Amigo</h2>
+        <form id="form-invitacion">
+          <label for="correo">Correo electrónico:</label>
+          <input type="email" id="correo" name="correo" required />
+          <button type="submit">Enviar invitación</button>
+        </form>
+        <div id="resultado-invitacion"></div>
+      </section>
+    {{/if}}
+  {{/if}}
+
+</div>
+
+<!-- Inyectar datos JSON del servidor -->
+<script>
+  window.codigoPartida = '{{codigo}}';
+  window.tableroInicial = {{{tableroJSON}}};
+  window.turnoInicial = '{{turno}}';
+  window.historialInicial = {{{historialJSON}}};
+  window.capturadasBlancasInicial = {{{capturadasBlancasJSON}}};
+  window.capturadasNegrasInicial = {{{capturadasNegrasJSON}}};
+
+  console.log("Turno inicial:", window.turnoInicial);
+
+  document.addEventListener("DOMContentLoaded", () => {
+    console.log("✅ Cargando tablero inicial...");
+    console.log(window.tableroInicial);
+
+    if (window.tableroInicial && Array.isArray(window.tableroInicial)) {
+      actualizarVista(
+        window.tableroInicial,
+        window.turnoInicial,
+        window.historialInicial,
+        window.capturadasBlancasInicial,
+        window.capturadasNegrasInicial
+      );
+    } else {
+      console.error("❌ No se recibió tablero inicial correctamente.");
+    }
+
+    // ✅ Script para invitación
+    const form = document.getElementById('form-invitacion');
+    if (form) {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const correo = document.getElementById('correo').value;
+        const codigo = window.codigoPartida;
+        const enlace = `${window.location.origin}/invitacion/${codigo}`;
+
+        const resultado = document.getElementById('resultado-invitacion');
+        resultado.innerHTML = `
+          <p>¡Invitación generada para <strong>${correo}</strong>!</p>
+          <p>Comparte este enlace:</p>
+          <code>${enlace}</code>
+        `;
+      });
+    }
+  });
+</script>
+
+<script src="/script.js"></script>
+

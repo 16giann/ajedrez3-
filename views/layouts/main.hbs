@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{title}}</title>
+  <link rel="stylesheet" href="/estilos.css" />
+</head>
+<body>
+
+  <div class="page-wrapper">
+
+    <header>
+      {{#if usuario}}
+        <p>Bienvenido, {{usuario.username}} | <a href="/logout">Cerrar sesión</a></p>
+      {{else}}
+        <p><a href="/login">Iniciar sesión</a> | <a href="/registro">Registrarse</a></p>
+      {{/if}}
+      <h1 class="fade-in">{{title}}</h1>
+    </header>
+
+    <main>
+      {{{body}}}
+    </main>
+  </div>
+
+</body>
+</html>

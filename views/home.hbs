@@ -1,0 +1,83 @@
+<div id="paginainicial">
+
+  <section class="estadisticas">
+    <h2>Estadísticas de tu juego</h2>
+    <ul>
+      <li>Victorias: {{estadisticas.victorias}}</li>
+      <li>Empates: {{estadisticas.empates}}</li>
+      <li>Derrotas: {{estadisticas.derrotas}}</li>
+      <li>Rango: {{estadisticas.rango}}</li>
+      <li>Puntaje: {{estadisticas.puntaje}}</li>
+    </ul>
+  </section>
+
+  <section class="lista-partidas">
+    <h2>Partidas en curso</h2>
+    <ul>
+      {{#each partidasEnCurso}}
+        <li>Contra {{this.oponente}} – Partida en progreso</li>
+      {{/each}}
+    </ul>
+  </section>
+
+  <section class="historial">
+    <h2>Historial de partidas finalizadas</h2>
+    <ul>
+      {{#each historial}}
+        <li>{{this.resultado}} vs {{this.oponente}}</li>
+      {{/each}}
+    </ul>
+  </section>
+
+  <section class="publicas">
+    <h2>Partidas públicas disponibles</h2>
+    <ul>
+      {{#each partidasPublicas}}
+        <li>vs {{this.oponente}}
+          <button onclick="unirse('{{this.codigo}}')">Unirse</button>
+        </li>
+      {{/each}}
+    </ul>
+  </section>
+
+  <section class="crear-nueva-partida">
+    <h2>Inicia una nueva partida</h2>
+
+    <form action="/crear-partida-home" method="POST">
+      <label>¿Con qué color deseas jugar?</label>
+      <div class="radio-group">
+        <label><input type="radio" name="color" value="blanco" checked> Blancas</label>
+        <label><input type="radio" name="color" value="negro"> Negras</label>
+      </div>
+      <button type="submit">Crear Partida</button>
+    </form>
+
+    {{#if codigoCreada}}
+      <div class="codigo-creada">
+        <p>Partida creada con código: <strong>{{codigoCreada}}</strong></p>
+        <p>Enlace para compartir:</p>
+        <input type="text" value="{{baseUrl}}/play?codigo={{codigoCreada}}" readonly onclick="this.select()" />
+        <a href="/play?codigo={{codigoCreada}}">Ir al tablero</a>
+      </div>
+    {{/if}}
+  </section>
+
+  <section class="unirse-partida">
+    <h2>Unirse a una partida existente</h2>
+    <form action="/unirse" method="POST">
+      <label for="codigo">Código de la partida:</label>
+      <input type="text" id="codigo" name="codigo" required>
+      <button type="submit">Unirse</button>
+    </form>
+  </section>
+
+  <nav>
+    <ul>
+      <li><a href="/login">Volver al Inicio</a></li>
+      <li><a href="/perfil">Modificar Perfil</a></li>
+      <li><a href="/historia">Historia y reglas del juego</a></li>
+      <li><a href="/desarrollador">Desarrollador</a></li>
+    </ul>
+  </nav>
+
+</div>

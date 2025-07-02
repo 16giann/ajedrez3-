@@ -1,0 +1,9 @@
+<main id="eliminar-partida">
+  <h1>{{titulo}}</h1>
+  <p>¿Estás seguro que deseas eliminar la partida con código: <strong>{{codigo}}</strong>?</p>
+
+  <form method="POST" action="/eliminar-partida/{{codigo}}">
+    <button type="submit">Sí, eliminar partida</button>
+    <a href="/play?codigo={{codigo}}">No, volver atrás</a>
+  </form>
+</main>
